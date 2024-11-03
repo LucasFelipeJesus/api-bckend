@@ -77,3 +77,5 @@ const CustomerController = {
         res.status(200).json({ service, message: "Customer updated" })
     },
 }
+
+export default CustomerController

@@ -13,6 +13,7 @@ const ProfessionalController = {
                 Image: req.body.Image,
                 services: req.body.services,
             })
+
             const newProfessional = await professional.save()
             res.status(201).json(newProfessional)
         } catch (err) {
