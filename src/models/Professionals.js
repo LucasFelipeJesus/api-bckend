@@ -1,5 +1,4 @@
 import mongoose from "mongoose"
-import { Schema } from "mongoose"
 import { serviceSchema } from "./Services.js"
 
 const professionalSchema = new mongoose.Schema(

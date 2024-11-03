@@ -1,15 +1,12 @@
 import { Router } from "express"
-import multer, { upload } from "../config/multer.js"
-
 import ProfessionalController from "../controllers/ProfessionalController.js"
 
-const router = Router()
+const professionalRoutes = Router()
 
-router
-    .route("/professional")
-    .post(upload.single("image"), ProfessionalController.create)
-router.route("/professional").get(ProfessionalController.getall)
-router.route("/professional/:id").get(ProfessionalController.getOne)
-router.route("/professional/:id").delete(ProfessionalController.delete)
+professionalRoutes.post("/", ProfessionalController.create)
+professionalRoutes.get("/", ProfessionalController.getall)
+professionalRoutes.get("/:id", ProfessionalController.getOne)
+professionalRoutes.delete("/:id", ProfessionalController.delete)
+professionalRoutes.put("/:id", ProfessionalController.update)
 
-export default router
+export default professionalRoutes

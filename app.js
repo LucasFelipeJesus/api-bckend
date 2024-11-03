@@ -7,8 +7,8 @@ app.use(express.json())
 
 //rotas
 
-import router from "./src/routes/Services.js"
-app.use("/api", router)
+import routes from "./src/routes/router.js"
+app.use("/api", routes)
 
 //DB Connection
 import conn from "./src/db/conn.js"

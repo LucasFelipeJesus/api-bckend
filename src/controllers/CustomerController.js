@@ -1,4 +1,4 @@
-import Customer from "../models/Customers"
+import Customer from "../models/Customers.js"
 
 const CustomerController = {
     create: async (req, res) => {

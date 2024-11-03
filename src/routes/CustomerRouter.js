@@ -2,12 +2,12 @@ import { Router } from "express"
 
 import CustomerController from "../controllers/CustomerController.js"
 
-const router = Router()
+const customerRoutes = Router()
 
-router.route("/customer").post(CustomerController.create)
-router.route("/customer").get(CustomerController.getall)
-router.route("/customer/:id").get(CustomerController.getOne)
-router.route("/customer/:id").delete(CustomerController.delete)
-router.route("/customer/:id").put(CustomerController.update)
+customerRoutes.post("/", CustomerController.create)
+customerRoutes.get("/", CustomerController.getall)
+customerRoutes.get("/:id", CustomerController.getOne)
+customerRoutes.delete("/:id", CustomerController.delete)
+customerRoutes.put("/:id", CustomerController.update)
 
-export default router
+export default customerRoutes

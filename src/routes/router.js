@@ -1,8 +1,12 @@
 import { Router } from "express"
-import ServiceController from "../controllers/ServiceController"
+import serviceRoutes from "./Services.js"
+import professionalRoutes from "./ProfessionalRouter.js"
+import customerRoutes from "./CustomerRouter.js"
 
-const router = Router()
+const routes = Router()
 
-router.post("/services", ServiceController.create)
+routes.use("/services", serviceRoutes)
+routes.use("/professional", professionalRoutes)
+routes.use("/customer", customerRoutes)
 
-export default router
+export default routes

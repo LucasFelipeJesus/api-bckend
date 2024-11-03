@@ -2,12 +2,12 @@ import { Router } from "express"
 
 import ServiceController from "../controllers/ServiceController.js"
 
-const router = Router()
+const serviceRoutes = Router()
 
-router.route("/services").post(ServiceController.create)
-router.route("/services").get(ServiceController.getall)
-router.route("/services/:id").get(ServiceController.getOne)
-router.route("/services/:id").delete(ServiceController.delete)
-router.route("/services/:id").put(ServiceController.update)
+serviceRoutes.post("/", ServiceController.create)
+serviceRoutes.get("/", ServiceController.getall)
+serviceRoutes.get("/:id", ServiceController.getOne)
+serviceRoutes.delete("/:id", ServiceController.delete)
+serviceRoutes.put("/:id", ServiceController.update)
 
-export default router
+export default serviceRoutes

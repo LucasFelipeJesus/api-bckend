@@ -1,4 +1,4 @@
-import Professional from "../models/Professionals"
+import Professional from "../models/Professionals.js"
 
 const ProfessionalController = {
     create: async (req, res) => {
@@ -13,7 +13,6 @@ const ProfessionalController = {
                 services: req.body.services,
                 Image: req.file ? req.file.path : null,
             })
-
             const newProfessional = await professional.save()
             res.status(201).json(newProfessional)
         } catch (err) {
