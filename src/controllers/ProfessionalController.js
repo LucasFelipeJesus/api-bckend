@@ -10,8 +10,8 @@ const ProfessionalController = {
                 address: req.body.address,
                 city: req.body.city,
                 state: req.body.state,
-                Image: req.body.Image,
                 services: req.body.services,
+                Image: req.file ? req.file.path : null,
             })
 
             const newProfessional = await professional.save()
@@ -73,7 +73,7 @@ const ProfessionalController = {
             address: req.body.address,
             city: req.body.city,
             state: req.body.state,
-            Image: req.body.Image,
+            Image: req.file ? req.file.path : null,
             services: req.body.services,
         }
 
