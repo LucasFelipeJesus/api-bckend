@@ -1,8 +1,19 @@
 import Professional from "../models/Professionals.js"
+import Service from "../models/Services.js"
 
 const ProfessionalController = {
     create: async (req, res) => {
         try {
+            const servicesNames = req.body.services.map(
+                (service) => service.name
+            )
+
+            const services = await Service.find({
+                name: { $in: servicesNames },
+            })
+
+            const serviceIds = services.map((service) => service._id)
+
             const professional = new Professional({
                 name: req.body.name,
                 email: req.body.email,
@@ -10,8 +21,8 @@ const ProfessionalController = {
                 address: req.body.address,
                 city: req.body.city,
                 state: req.body.state,
-                services: req.body.services,
-                Image: req.file ? req.file.path : null,
+                Image: req.body.Image,
+                services: serviceIds,
             })
             const newProfessional = await professional.save()
             res.status(201).json(newProfessional)
@@ -22,7 +33,7 @@ const ProfessionalController = {
 
     getall: async (req, res) => {
         try {
-            const professionals = await Professional.find()
+            const professionals = await Professional.find().populate("services")
             res.json(professionals)
         } catch (err) {
             res.status(500).json({ message: err.message })
@@ -32,7 +43,9 @@ const ProfessionalController = {
     getOne: async (req, res) => {
         try {
             const id = req.params.id
-            const professional = await Professional.findById(id)
+            const professional = await Professional.findById(id).populate(
+                "services"
+            )
             if (professional == null) {
                 return res
                     .status(404)

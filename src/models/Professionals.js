@@ -1,5 +1,4 @@
 import mongoose from "mongoose"
-import { serviceSchema } from "./Services.js"
 
 const professionalSchema = new mongoose.Schema(
     {
@@ -29,11 +28,15 @@ const professionalSchema = new mongoose.Schema(
         },
         Image: {
             type: String,
-            required: true,
+            required: false,
         },
-        services: {
-            type: [serviceSchema],
-        },
+        services: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Service",
+                required: false,
+            },
+        ],
     },
     {
         timestamps: true,
