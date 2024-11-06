@@ -1,4 +1,4 @@
-import Post from "../models/Post"
+import Post from "../models/Post.js"
 
 const PostController = {
     create: async (req, res) => {
@@ -54,3 +54,5 @@ const PostController = {
         }
     },
 }
+
+export default PostController

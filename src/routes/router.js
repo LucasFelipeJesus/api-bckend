@@ -2,6 +2,7 @@ import { Router } from "express"
 import serviceRoutes from "./Services.js"
 import professionalRoutes from "./ProfessionalRouter.js"
 import customerRoutes from "./CustomerRouter.js"
+import postRoutes from "./PostRouter.js"
 
 const routes = Router()
 
