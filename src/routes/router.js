@@ -8,5 +8,6 @@ const routes = Router()
 routes.use("/services", serviceRoutes)
 routes.use("/professional", professionalRoutes)
 routes.use("/customer", customerRoutes)
+routes.use("/posts", postRoutes)
 
 export default routes
