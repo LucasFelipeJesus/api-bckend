@@ -1,7 +1,7 @@
 import fs from "fs"
 import { google } from "googleapis"
 
-const GOOGLE_API_FOLDER_ID = "18DPFJm--TFG3OpkwSuUVR_rJ9MXxx-D6"
+const GOOGLE_API_FOLDER_ID = "teste"
 
 // Função de upload para o Google Drive
 async function uploadFileToGoogleDrive(fileName, filePath) {
