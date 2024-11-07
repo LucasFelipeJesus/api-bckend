@@ -81,7 +81,7 @@ const CustomerController = {
                 especialities: req.body.especialities,
             }
 
-            const updatedProfessional = await Customer.findOneAndUpdate(
+            const updatedCustomer = await Customer.findOneAndUpdate(
                 { token: token },
                 updatedData,
                 { new: true }
