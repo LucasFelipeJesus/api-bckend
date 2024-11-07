@@ -1,3 +1,4 @@
+import e from "express"
 import Customer from "../models/Customers.js"
 
 const CustomerController = {
@@ -45,17 +46,19 @@ const CustomerController = {
     delete: async (req, res) => {
         try {
             const token = req.params.token
-            const customer = await Customer.findOneAndDelete({ token: token })
-            if (customer == null) {
+            const customer = await Customer.findOne({ token: token })
+
+            if (!customer) {
                 return res.status(404).json({ message: "Customer not found" })
             }
-            await customer.delete()
+
+            await customer.deleteOne() // Exclui o documento encontrado
 
             res.status(200).json({
                 deletedCustomer: {
                     name: customer.name,
                     token: customer.token,
-                    email: customer.email,
+                    cpf: customer.cpf,
                 },
                 message: "Customer deleted",
             })
@@ -104,5 +107,4 @@ const CustomerController = {
         }
     },
 }
-
 export default CustomerController
