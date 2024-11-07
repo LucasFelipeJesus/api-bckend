@@ -1,24 +1,37 @@
-// Import multer and path
 import multer from "multer"
-import path from "path"
 import fs from "fs"
+import path from "path"
 
-const uploadsDir = "uploads"
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir)
-}
+// Obtendo o diretório atual usando import.meta.url
+const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
-// Configuração do armazenamento com multer para salvar a imagem em uma pasta local
+// Caminho para o diretório de uploads na raiz do projeto
+const uploadPath = path.resolve("uploads")
+
+// Configuração do armazenamento do Multer
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "../uploads") // Pasta onde as imagens serão salvas
+    destination: (req, file, cb) => {
+        // Verifica se o diretório de uploads existe, se não, cria
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true }) // Cria a pasta se não existir
+        }
+        cb(null, uploadPath) // Direciona para o caminho absoluto do diretório de uploads
     },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9)
-        cb(null, uniqueSuffix + path.extname(file.originalname)) // Nome do arquivo com timestamp único
+    filename: (req, file, cb) => {
+        // Gera um nome único para o arquivo
+        cb(null, Date.now() + "-" + file.originalname)
     },
 })
 
-const upload = multer({ storage })
+// Verifique o tipo de arquivo se necessário
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+            return cb(new Error("Only JPEG or PNG images are allowed"))
+        }
+        cb(null, true)
+    },
+}).single("Image") // Certifique-se de que o nome do campo no formulário é "image"
 
 export default upload

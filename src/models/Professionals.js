@@ -38,6 +38,10 @@ const professionalSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        especialities: {
+            type: String,
+            required: false,
+        },
         ratings: [
             {
                 type: Number,

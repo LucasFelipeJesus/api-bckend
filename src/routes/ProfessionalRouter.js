@@ -1,13 +1,14 @@
 import { Router } from "express"
 import ProfessionalController from "../controllers/ProfessionalController.js"
+import upload from "../config/multer.js"
 
 const professionalRoutes = Router()
 
 professionalRoutes.post("/", ProfessionalController.create)
-professionalRoutes.post("/:id/rating", ProfessionalController.addRating)
+professionalRoutes.post("/:token/rating", ProfessionalController.addRating)
 professionalRoutes.get("/", ProfessionalController.getall)
-professionalRoutes.get("/:id", ProfessionalController.getOne)
-professionalRoutes.delete("/:id", ProfessionalController.delete)
-professionalRoutes.put("/:id", ProfessionalController.update)
+professionalRoutes.get("/:token", ProfessionalController.getOne)
+professionalRoutes.delete("/:token", ProfessionalController.delete)
+professionalRoutes.put("/:token", ProfessionalController.update)
 
 export default professionalRoutes

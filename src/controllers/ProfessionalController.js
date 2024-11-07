@@ -4,16 +4,38 @@ import Service from "../models/Services.js"
 const ProfessionalController = {
     create: async (req, res) => {
         try {
-            const servicesNames = req.body.services.map(
-                (service) => service.name
-            )
+            // Verificando se 'services' é um array e se cada item tem o campo 'name'
+            if (!Array.isArray(req.body.services)) {
+                return res
+                    .status(400)
+                    .json({ message: "'services' should be an array" })
+            }
 
+            const servicesNames = req.body.services.map((service) => {
+                if (!service.name) {
+                    throw new Error(
+                        "Each service should have a 'name' property"
+                    )
+                }
+                return service.name
+            })
+
+            // Buscando os serviços no banco de dados
             const services = await Service.find({
                 name: { $in: servicesNames },
             })
 
+            // Verificando se algum serviço não foi encontrado
+            if (services.length !== servicesNames.length) {
+                return res
+                    .status(404)
+                    .json({ message: "Some services not found" })
+            }
+
+            // Pegando os IDs dos serviços encontrados
             const serviceIds = services.map((service) => service._id)
 
+            // Criando o novo profissional
             const professional = new Professional({
                 name: req.body.name,
                 cpf: req.body.cpf,
@@ -25,14 +47,19 @@ const ProfessionalController = {
                 state: req.body.state,
                 Image: req.body.Image,
                 services: serviceIds,
+                especialities: req.body.especialities,
             })
+
+            // Salvando o profissional no banco
             const newProfessional = await professional.save()
+
+            // Respondendo com o novo profissional criado
             res.status(201).json(newProfessional)
         } catch (err) {
+            console.error(err) // Exibe detalhes do erro no console para depuração
             res.status(400).json({ message: err.message })
         }
     },
-
     getall: async (req, res) => {
         try {
             const professionals = await Professional.find().populate("services")
@@ -44,68 +71,91 @@ const ProfessionalController = {
 
     getOne: async (req, res) => {
         try {
-            const id = req.params.id
-            const professional = await Professional.findById(id).populate(
-                "services"
-            )
+            const token = req.params.token // Pegando o token da URL
+            const professional = await Professional.findOne({
+                token: token,
+            }).populate("services")
+
             if (professional == null) {
                 return res
                     .status(404)
                     .json({ message: "Professional not found" })
             }
-            res.json(professional)
+
+            return res.json(professional)
         } catch (err) {
             return res.status(500).json({ message: err.message })
         }
     },
-
     delete: async (req, res) => {
         try {
-            const id = req.params.id
-            const professional = await Professional.findById(id)
-            if (professional == null) {
+            const token = req.params.token
+            const professional = await Professional.findOne({ token: token })
+
+            if (!professional) {
                 return res
                     .status(404)
                     .json({ message: "Professional not found" })
             }
-            const deletedProfessional = await Professional.findByIdAndDelete(id)
+
+            await professional.deleteOne() // Exclui o documento encontrado
+
             res.status(200).json({
-                deletedProfessional,
+                deletedProfessional: {
+                    name: professional.name,
+                    token: professional.token,
+                    cpf: professional.cpf,
+                },
                 message: "Professional deleted",
             })
         } catch (err) {
             return res.status(500).json({ message: err.message })
         }
     },
-
     update: async (req, res) => {
-        const id = req.params.id
-        const professional = {
-            name: req.body.name,
-            cpf: req.body.cpf,
-            email: req.body.email,
-            phone: req.body.phone,
-            address: req.body.address,
-            city: req.body.city,
-            state: req.body.state,
-            token: req.body.token,
-            Image: req.body.Image,
-            services: req.body.services,
-        }
+        try {
+            const token = req.params.token
+            const updatedData = {
+                name: req.body.name,
+                cpf: req.body.cpf,
+                email: req.body.email,
+                phone: req.body.phone,
+                address: req.body.address,
+                city: req.body.city,
+                state: req.body.state,
+                token: req.body.token,
+                Image: req.body.Image,
+                services: req.body.services,
+                especialities: req.body.especialities,
+            }
 
-        const updatedProfessional = await Professional.findByIdAndUpdate(
-            id,
-            professional
-        )
-        if (updatedProfessional == null) {
-            return res.status(404).json({ message: "Professional not found" })
+            const updatedProfessional = await Professional.findOneAndUpdate(
+                { token: token },
+                updatedData,
+                { new: true }
+            )
+
+            if (!updatedProfessional) {
+                return res
+                    .status(404)
+                    .json({ message: "Professional not found" })
+            }
+
+            res.status(200).json({
+                updatedProfessional: {
+                    name: updatedProfessional.name,
+                    cpf: updatedProfessional.cpf,
+                    token: updatedProfessional.token,
+                },
+                message: "Professional updated",
+            })
+        } catch (err) {
+            return res.status(500).json({ message: err.message })
         }
-        res.status(200).json({ professional, message: "Professional updated" })
     },
-
     addRating: async (req, res) => {
         try {
-            const { id } = req.params
+            const { token } = req.params
             const { newRating } = req.body
 
             // Valida a nova pontuação
@@ -118,7 +168,7 @@ const ProfessionalController = {
                     message: "Pontuação inválida. Use um valor entre 1 e 5.",
                 })
             }
-            const professional = await Professional.findById(id)
+            const professional = await Professional.findOne({ token: token })
             if (professional == null) {
                 return res
                     .status(404)

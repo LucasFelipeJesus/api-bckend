@@ -11,6 +11,7 @@ const CustomerController = {
                 city: req.body.city,
                 state: req.body.state,
                 Image: req.body.Image,
+                token: req.body.token,
             })
             const newCustomer = await customer.save()
             res.status(201).json(newCustomer)
@@ -30,8 +31,8 @@ const CustomerController = {
 
     getOne: async (req, res) => {
         try {
-            const id = req.params.id
-            const customer = await Customer.findById(id)
+            const token = req.params.token
+            const customer = await Customer.findOne({ token: token })
             if (customer == null) {
                 return res.status(404).json({ message: "Customer not found" })
             }
@@ -43,14 +44,19 @@ const CustomerController = {
 
     delete: async (req, res) => {
         try {
-            const id = req.params.id
-            const customer = await Customer.findById(id)
+            const token = req.params.token
+            const customer = await Customer.findOneAndDelete({ token: token })
             if (customer == null) {
                 return res.status(404).json({ message: "Customer not found" })
             }
-            const deletedCustomer = await Customer.findByIdAndDelete(id)
+            await customer.delete()
+
             res.status(200).json({
-                deletedCustomer,
+                deletedCustomer: {
+                    name: customer.name,
+                    token: customer.token,
+                    email: customer.email,
+                },
                 message: "Customer deleted",
             })
         } catch (err) {
@@ -59,22 +65,43 @@ const CustomerController = {
     },
 
     update: async (req, res) => {
-        const id = req.params.id
-        const customer = {
-            name: req.body.name,
-            email: req.body.email,
-            phone: req.body.phone,
-            address: req.body.address,
-            city: req.body.city,
-            state: req.body.state,
-            Image: req.body.Image,
-        }
+        try {
+            const token = req.params.token
+            const updatedData = {
+                name: req.body.name,
+                cpf: req.body.cpf,
+                email: req.body.email,
+                phone: req.body.phone,
+                address: req.body.address,
+                city: req.body.city,
+                state: req.body.state,
+                token: req.body.token,
+                Image: req.body.Image,
+                services: req.body.services,
+                especialities: req.body.especialities,
+            }
 
-        const updatedCustomer = await Customer.findByIdAndUpdate(id, customer)
-        if (updatedCustomer == null) {
-            return res.status(404).json({ message: "Customer not found" })
+            const updatedProfessional = await Customer.findOneAndUpdate(
+                { token: token },
+                updatedData,
+                { new: true }
+            )
+
+            if (!updatedCustomer) {
+                return res.status(404).json({ message: "Customer not found" })
+            }
+
+            res.status(200).json({
+                updatedCustomer: {
+                    name: updatedCustomer.name,
+                    token: updatedCustomer.token,
+                    cpf: updatedCustomer.cpf,
+                },
+                message: "Customer updated!",
+            })
+        } catch (err) {
+            return res.status(500).json({ message: err.message })
         }
-        res.status(200).json({ service, message: "Customer updated" })
     },
 }
 
