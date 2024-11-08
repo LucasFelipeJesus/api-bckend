@@ -1,6 +1,5 @@
 import { Router } from "express"
 import ProfessionalController from "../controllers/ProfessionalController.js"
-import upload from "../config/multer.js"
 
 const professionalRoutes = Router()
 
