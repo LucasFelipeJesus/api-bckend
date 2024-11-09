@@ -1,4 +1,3 @@
-import e from "express"
 import Customer from "../models/Customers.js"
 
 const CustomerController = {
