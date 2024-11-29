@@ -44,7 +44,7 @@ const professionalSchema = new mongoose.Schema(
         },
         token: {
             type: String,
-            required: false,
+            required: true,
         },
         especialities: {
             type: String,
