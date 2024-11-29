@@ -50,33 +50,33 @@ const professionalSchema = new mongoose.Schema(
             type: String,
             required: false,
         },
-        // ratings: [
-        //     {
-        //         type: Number,
-        //         required: false,
-        //         min: 1,
-        //         max: 5,
-        //     },
-        // ],
-        // averageRating: {
-        //     type: Number,
-        //     required: false,
-        //     default: 0,
-        // },
-        // services: [
-        //     {
-        //         type: mongoose.Schema.Types.ObjectId,
-        //         ref: "Service",
-        //         required: false,
-        //     },
-        // ],
-        // posts: [
-        //     {
-        //         type: mongoose.Schema.Types.ObjectId,
-        //         ref: "Post",
-        //         required: false,
-        //     },
-        // ],
+        ratings: [
+            {
+                type: Number,
+                required: false,
+                min: 1,
+                max: 5,
+            },
+        ],
+        averageRating: {
+            type: Number,
+            required: false,
+            default: 0,
+        },
+        services: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Service",
+                required: false,
+            },
+        ],
+        posts: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Post",
+                required: false,
+            },
+        ],
     },
     {
         timestamps: true,
