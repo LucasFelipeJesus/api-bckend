@@ -4,39 +4,43 @@ const professionalSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: true,
+            required: false,
         },
         cpf: {
             type: String,
-            required: true,
+            required: false,
         },
         email: {
             type: String,
             required: true,
         },
-        phone: {
+        password: {
             type: String,
             required: true,
+        },
+        phone: {
+            type: String,
+            required: false,
         },
         cep: {
             type: String,
-            required: true,
+            required: false,
         },
         address: {
             type: String,
-            required: true,
+            required: false,
         },
         bairro: {
             type: String,
-            required: true,
+            required: false,
         },
         city: {
             type: String,
-            required: true,
+            required: false,
         },
         state: {
             type: String,
-            required: true,
+            required: false,
         },
         Image: {
             type: String,
@@ -44,7 +48,7 @@ const professionalSchema = new mongoose.Schema(
         },
         token: {
             type: String,
-            required: true,
+            required: false,
         },
         especialities: {
             type: String,
